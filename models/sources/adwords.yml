@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: adwords
+    database: amanotes-analytics  
+    schema: raw_cost_by_batch  
+    tables:
+      - name: adwords_cost_20191112_1586143632
+      - name: adwords_cost_20191113_1586143645
+      - name: adwords_cost_20191114_1586143654
+      - name: adwords_cost_20191115_1586143663
+      - name: adwords_cost_20191116_1586143676
+      - name: adwords_cost_20191117_1586143684
+      - name: adwords_cost_20191118_1586143697
+      - name: adwords_cost_20191119_1586143708
+      - name: adwords_cost_20191120_1586143718
+      - name: adwords_cost_20191121_1586143731
+      - name: adwords_cost_20191122_1586143743
+      - name: adwords_cost_20191123_1586143754

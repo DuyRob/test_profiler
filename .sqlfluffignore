@@ -1,0 +1,11 @@
+target/
+dbt_modules/
+dbt_packages/
+macros/
+utils/
+venv/
+analysis/
+generated_base_models/
+analyses/
+snapshots/
+backups/

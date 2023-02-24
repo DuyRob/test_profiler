@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: applovin
+    database: amanotes-analytics  
+    schema: raw_cost_by_batch  
+    tables: 
+      - name: applovin_cost_20200111_1586146324
+      - name: applovin_cost_20200111_1597056452
+      - name: applovin_cost_20200112_1586146335
+      - name: applovin_cost_20200112_1597056453
+      - name: applovin_cost_20200113_1586146343
+      - name: applovin_cost_20200113_1597056453
+      - name: applovin_cost_20200114_1586146353
+      - name: applovin_cost_20200114_1597056454
+      - name: applovin_cost_20200115_1586146363
+      - name: applovin_cost_20200115_1597056455
+      - name: applovin_cost_20200116_1586146375
+      - name: applovin_cost_20200116_1597056455

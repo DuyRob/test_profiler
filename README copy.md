@@ -1,6 +1,6 @@
-## Amanote dbt - guide for set up and running dbt
+## Yeah1 dbt - guide for set up and running dbt
 ---
-This is the dbt project for Amanote dbt models with BigQuery connection.
+This is the dbt project for Yeah1 dbt models with BigQuery connection.
 _dbt version: 1.3.0_
 
 ### Setting up Python environment
@@ -198,6 +198,7 @@ With main concept of DRY (don't repeat yourself) applied as a dbt-best-practice,
 
 - Naming convention: `stg__[source_name]__[model_name]`
 - Definition: models that join base models from a single schema source, aims to **denormalize** and group columns in a logical way that will be **utilized in downstream more than once**.
+- Example: joining together `material` and `material_type` table via `material_type_id` that exist in both tables, to create a staging table that stores all attributes of material in a model called `stg__case__materials`
 - Transformations required/ allowed:
   - **joins** of 2 or more models to denormalize how data is stored before utilizing them in downstream
   - optional: `case when` or similar enrichment transformations that can be derived from such joins and make sense to be stored at staging and not intermediate model (refer below)
@@ -211,15 +212,13 @@ With main concept of DRY (don't repeat yourself) applied as a dbt-best-practice,
   - `int__[A_B_x]__joined` for models that *join* 2 sources: `A` and `B` and store `x` as the primary key
   - if anything deviates from these scenarios, it's important team discuss and draw out a shared convention update
   - When no source is mentioned in the naming, we should automatically assume they come from single source schema
-- Definition: intermediate models are downstream of staging models, OR of base where applicable, it will **combine data from across sources**.
+- Definition: intermediate models are downstream of staging models, OR of base where applicable, it will **combine data from across schemas** and/or store **business logic transformations** at this layer.
 - Transformations required/ allowed: intermediate models usually have to union or join 2 or more tables together to achieve mentioned purpose, with business logic transformations.
-- Tests required: must-have tests on PK of model `['unique', 'not_null', 'dbt_utils.at_least_one]`
 
 #### mart
 
 - Naming convention: `fct_[model_name]` and `dim_[model_name]` per dbt convention
-- Definition: `fct` is fact model, `dim` is dimension model. We apply dimensional modeling concepts.
-- Tests required: must-have tests on PK of model `['unique', 'not_null', 'dbt_utils.at_least_one]`
+- Definition: `fct` is fact model, `dim` is dimension model. We apply dimensional modeling concepts. Mart models can be further organized into separate sub-folders which align with **departmental** usage
 
 #### snapshot
 

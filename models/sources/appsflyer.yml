@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: appsflyer
+    database: amanotes-analytics  
+    schema: raw_appsflyer_by_batch  
+    tables:
+      - name: appsflyer_20161212_1605090585
+      - name: appsflyer_20161212_1605091070
+      - name: appsflyer_20161212_1605091420
+      - name: appsflyer_20161212_1605091795
+      - name: appsflyer_20161212_1605093213
+      - name: appsflyer_20161213_1605090573
+      - name: appsflyer_20161213_1605091060
+      - name: appsflyer_20161213_1605091409
+      - name: appsflyer_20161213_1605091786
+      - name: appsflyer_20161213_1605093206
+      - name: appsflyer_20161214_1605090563
+      - name: appsflyer_20161214_1605091052
+      - name: appsflyer_20161214_1605091401
+      - name: appsflyer_20161214_1605091778

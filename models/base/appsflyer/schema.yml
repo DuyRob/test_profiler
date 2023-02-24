@@ -1,0 +1,10 @@
+version: 2
+
+models:
+
+  - name: base__appsflyer__cost
+    description: Appsflyer base model
+    columns:
+      - name: id 
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null']
