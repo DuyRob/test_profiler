@@ -35,6 +35,7 @@ models:
   ama_dbt:
 
     base:
+      +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
       +materialized: table
       +required_tests: {"unique.*|not_null": 2}      
       adwords:
@@ -47,11 +48,13 @@ models:
         +schema: base_mintegral   
 
     intermediate:
+      +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
       +materialized: table
       +schema: intermediate
       +required_tests: {"unique.*|not_null|at_least_one": 3}
     
     mart:
+      +database: "{{ 'ama-mart-prod' if target.name == 'prod' else 'ama-mart-dev' }}"
       +materialized: table
       +schema: mart
       +required_tests: {"unique.*|not_null|at_least_one": 3}
