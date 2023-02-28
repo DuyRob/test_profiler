@@ -1,0 +1,13 @@
+version: 2
+
+models:
+
+  - name: base__applovin__cost
+    description: Applovin base model
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null

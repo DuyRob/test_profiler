@@ -1,0 +1,13 @@
+version: 2
+
+models:
+
+  - name: base__mintegral__cost
+    description: Mintegral base model
+    columns:
+      - name: id 
+        description: '{{ doc("id")}}'
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null

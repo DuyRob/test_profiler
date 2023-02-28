@@ -1,0 +1,14 @@
+ama_dbt:
+  target: dev
+  outputs:
+    dev:
+      dataset: # insert your dev dataset here. Convention <team>_<name>, Ex: joon_bao
+      fixed_retries: 1
+      location: US
+      method: oauth
+      priority: interactive
+      project: ama-dwh-dev
+      execution_project : testing-daremi
+      threads: 8
+      timeout_seconds: 300
+      type: bigquery

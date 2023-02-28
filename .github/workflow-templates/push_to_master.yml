@@ -1,0 +1,110 @@
+name: push_to_master
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ARTIFACT_DBT_MANIFEST_NAME: dbt_manifest
+
+  DBT_PROFILES_DIR: ./
+
+  ## Environment variables for running Dbt on Google BigQuery
+  # DBT_GOOGLE_PROJECT_PROD: google-project-id
+  # DBT_GOOGLE_KEYFILE_PATH_PROD: path/to/your/service-account-key.json
+  # DBT_BIGQUERY_DATASET_PROD: bq-dataset-dev
+
+  ## Environment variables for running Dbt on Snowflake
+  # DBT_SNOWFLAKE_USER_PROD: snowflake-user-name
+  # DBT_SNOWFLAKE_ROLE_PROD: snowflake-role
+  # DBT_SNOWFLAKE_DATABASE_PROD: snowflake-database
+  # DBT_SNOWFLAKE_WAREHOUSE_PROD: snowflake-warehouse
+  # DBT_SNOWFLAKE_SCHEMA_PROD: snowflake-schema
+  # DBT_SNOWFLAKE_PRIVATE_KEY_PATH_PROD: path/to/your/snowflake-key
+  # DBT_SNOWFLAKE_PRIVATE_KEY_PASSPHRASE_PROD: {{ secrets.DBT_SNOWFLAKE_PRIVATE_KEY_PASSPHRASE_PROD }}
+
+jobs:
+  push_to_master:
+    name: push_to_master
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@master
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"
+
+      ## Dbt - Google BigQuery
+      # - name: Authenticate gcloud
+      #   uses: google-github-actions/setup-gcloud@v0.2.0
+      #   with:
+      #     service_account_key: ${{ secrets.BIGQUERY_SA_KEYFILE_PROD }}
+      #     project_id: ${{ env.DBT_GOOGLE_PROJECT_PROD }}
+      #
+      # - name: Create Google Service Account key file from secret
+      #   run: 'echo "$KEYFILE" > ${{ env.DBT_GOOGLE_KEYFILE_PATH_PROD }}'
+      #   shell: bash
+      #   env:
+      #     KEYFILE: ${{ secrets.BIGQUERY_SA_KEYFILE_PROD }}
+
+      ## Dbt - Snowflake
+      # - name: Create Snowflake key file from secret
+      #   run: 'echo "$KEYFILE" > ${{ env.DBT_SNOWFLAKE_PRIVATE_KEY_PATH_PROD }}'
+      #   shell: bash
+      #   env:
+      #     KEYFILE: ${{ secrets.SNOWFLAKE_KEY_PROD }}
+
+      ## Cache Pip wheel files
+      - name: Cache Pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+          dbt deps --target prod
+          dbt seed --target prod
+
+      ## Download dbt manifest uploaded in another workflow (default: push_to_master.yml).
+      # This manifest file will be used to filter out delta models.
+      - name: Download dbt manifest
+        id: download_dbt_manifest
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: "${{ github.workflow }}.yml"
+          workflow_conclusion: success
+          branch: main
+          name: ${{ env.ARTIFACT_DBT_MANIFEST_NAME }}
+          path: .
+          check_artifacts:  false
+        continue-on-error: true
+
+      ## In some case, manifest file artifact cannot be downloaded.
+      # Then, compile current code to create a new manifest file.
+      # Note, because previous dbt state is missing, all models will be
+      # run and tested.
+      - name: Create new Dbt manifest if cannot download
+        if: steps.download_dbt_manifest.outcome == 'failure'
+        run: |
+          dbt compile
+          cp target/manifest.json .
+
+      - name: Run delta models
+        id: run_dbt
+        run: dbt run -m state:modified+ --state . --target prod
+
+      - name: Test new models
+        run: dbt test --target prod -m state:modified+ --state .
+
+      - name: Upload dbt manifest
+        uses: actions/upload-artifact@v2
+        with:
+            name: ${{ env.ARTIFACT_DBT_MANIFEST_NAME }}
+            path: target/manifest.json
+            if-no-files-found: error
