@@ -14,9 +14,9 @@ env:
   DBT_PROFILES_DIR: ./
 
   ## Environment variables for running Dbt on Google BigQuery
-  DBT_GOOGLE_PROJECT_DEV: google-project-id
-  DBT_GOOGLE_KEYFILE_PATH_DEV: path/to/your/service-account-key.json
-  DBT_BIGQUERY_DATASET_DEV: bq-dataset-dev
+  DBT_GOOGLE_PROJECT_DEV: ama-dwh-dev
+  DBT_GOOGLE_KEYFILE_PATH_DEV: service_account.json
+  DBT_BIGQUERY_DATASET_DEV: CI
 
 jobs:
   pr_to_main_lint:
@@ -30,6 +30,19 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: "3.7.x"
+
+      ## Dbt - Google BigQuery
+      - name: Authenticate gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.BIGQUERY_SA_KEYFILE_DEV }}
+          project_id: ${{ env.DBT_GOOGLE_PROJECT_DEV }}
+      
+      - name: Create Google Service Account key file from secret
+        run: 'echo "$KEYFILE" > ${{ env.DBT_GOOGLE_KEYFILE_PATH_DEV }}'
+        shell: bash
+        env:
+          KEYFILE: ${{ secrets.BIGQUERY_SA_KEYFILE_DEV }}
 
       ## Install Python dependencies & Dbt packages
       - name: Install dependencies

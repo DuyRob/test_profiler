@@ -1,0 +1,15 @@
+ama_dbt:
+  target: dev
+  outputs:
+    dev:
+      dataset: "{{ env_var('DBT_BIGQUERY_DATASET_DEV') }}"
+      fixed_retries: 1
+      location: US
+      method: oauth
+      priority: interactive
+      project: "{{ env_var('DBT_GOOGLE_PROJECT_DEV') }}"
+      keyfile: "{{ env_var('DBT_GOOGLE_KEYFILE_PATH_DEV') }}"
+      execution_project : testing-daremi
+      threads: 8
+      timeout_seconds: 300
+      type: bigquery
