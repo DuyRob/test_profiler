@@ -24,7 +24,6 @@ renamed as (
         mapped_app_id
     from source
     -- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
-    where campaign_id != 'None'
 )
 
 select * from renamed

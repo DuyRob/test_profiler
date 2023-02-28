@@ -31,5 +31,6 @@ renamed as (
 
 select
     *,
-    {{ dbt_utils.surrogate_key(['ad_creative_id', 'campaign_id', 'act_date']) }} as id -- TODO UUID not found
+    {{ dbt_utils.surrogate_key(['ad_creative_id'
+        , 'campaign_id', 'act_date']) }} as id -- TODO UUID not found
 from renamed
