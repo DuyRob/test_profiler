@@ -10,7 +10,7 @@ renamed as (
         network_app_id, -- this should be ID and not name
         campaign,
         campaign_id,
-        location_id,
+        location_id, 
         impressions,
         clicks,
         installs,
