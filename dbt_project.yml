@@ -33,11 +33,13 @@ clean-targets:         # directories to be removed by `dbt clean`
 # using the `{{ config(...) }}` macro.
 models:
   ama_dbt:
-
+    # +hours_to_expiration: TO UPDATE
+    #https://docs.getdbt.com/reference/resource-configs/bigquery-configs#controlling-table-expiration
+    # auto-delete unused tables in development projects to reduce clutter and redundant storage
     base:
       +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
       +materialized: table
-      +required_tests: {"unique.*|not_null": 2}      
+      +required_tests: {"unique.*|not_null": 2}
       adwords:
         +schema: base_adwords
       applovin:
@@ -45,14 +47,14 @@ models:
       appsflyer:
         +schema: base_appsflyer
       mintegral:
-        +schema: base_mintegral   
+        +schema: base_mintegral
 
     intermediate:
       +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
       +materialized: table
       +schema: intermediate
       +required_tests: {"unique.*|not_null|at_least_one": 3}
-    
+
     mart:
       +database: "{{ 'ama-mart-prod' if target.name == 'prod' else 'ama-mart-dev' }}"
       +materialized: table

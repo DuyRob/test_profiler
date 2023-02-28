@@ -6,16 +6,16 @@ sources:
     schema: raw_cost_by_batch  
     tables:
       - name: mintegral_cost_20200114_1586500391
-      - name: mintegral_cost_20200114_1597308072
+      # - name: mintegral_cost_20200114_1597308072
       - name: mintegral_cost_20200115_1586500399
-      - name: mintegral_cost_20200115_1597308074
-      - name: mintegral_cost_20200116_1586500410
-      - name: mintegral_cost_20200116_1597308074
-      - name: mintegral_cost_20200117_1582189330
-      - name: mintegral_cost_20200117_1597308075
-      - name: mintegral_cost_20200118_1582189341
-      - name: mintegral_cost_20200118_1597308076
-      - name: mintegral_cost_20200119_1582189351
-      - name: mintegral_cost_20200119_1597308077
-      - name: mintegral_cost_20200120_1582190324
-      - name: mintegral_cost_20200120_1597308079
+      # - name: mintegral_cost_20200115_1597308074
+      # - name: mintegral_cost_20200116_1586500410
+      # - name: mintegral_cost_20200116_1597308074
+      # - name: mintegral_cost_20200117_1582189330
+      # - name: mintegral_cost_20200117_1597308075
+      # - name: mintegral_cost_20200118_1582189341
+      # - name: mintegral_cost_20200118_1597308076
+      # - name: mintegral_cost_20200119_1582189351
+      # - name: mintegral_cost_20200119_1597308077
+      # - name: mintegral_cost_20200120_1582190324
+      # - name: mintegral_cost_20200120_1597308079

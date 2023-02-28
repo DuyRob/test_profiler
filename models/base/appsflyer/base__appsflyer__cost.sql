@@ -27,7 +27,4 @@ renamed as (
     where campaign_id != 'None'
 )
 
-select
-    *,
-    {{ dbt_utils.surrogate_key(['campaign_id']) }} as id
-from renamed
+select * from renamed

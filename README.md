@@ -63,6 +63,7 @@ _dbt version: 1.3.0_
     ```
 
 - Refer: [dbt-codegen](https://github.com/dbt-labs/dbt-codegen#generate_model_yaml-source)
+- For sharded tables reference in source.yml files: https://docs.getdbt.com/reference/resource-properties/identifier
 
 #### 3. Run models
 

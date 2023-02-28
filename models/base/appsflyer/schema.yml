@@ -5,6 +5,6 @@ models:
   - name: base__appsflyer__cost
     description: Appsflyer base model
     columns:
-      - name: id 
+      - name: campaign_id 
         description: '{{ doc("id")}}'
         tests: ['unique', 'not_null']

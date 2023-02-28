@@ -7,7 +7,7 @@ with source as (
 renamed as (
     select
         act_date,
-        network_app_id,
+        network_app_id, -- this should be ID and not name
         campaign,
         campaign_id,
         location_id,
