@@ -17,11 +17,11 @@ renamed as (
         raw_cost,
         raw_cost_currency,
         media_source,
-        __index_level_0__
+        _dbt_source_relation
     from source
 )
 
 select
     *,
-    {{ dbt_utils.surrogate_key(['__index_level_0__', 'campaign_id']) }} as id
+    {{ dbt_utils.surrogate_key(['campaign_id', '_dbt_source_relation']) }} as id
 from renamed

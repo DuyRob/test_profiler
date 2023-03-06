@@ -20,7 +20,8 @@ renamed as (
         country_code,
         site_id,
         cost,
-        installs
+        installs,
+        _dbt_source_relation
     from source
     -- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
 )

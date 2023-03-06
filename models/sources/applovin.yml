@@ -5,15 +5,17 @@ sources:
     database: amanotes-analytics  
     schema: raw_cost_by_batch  
     tables: 
-      - name: applovin_cost_20200111_1586146324
-      - name: applovin_cost_20200111_1597056452
-      - name: applovin_cost_20200112_1586146335
-      - name: applovin_cost_20200112_1597056453
-      - name: applovin_cost_20200113_1586146343
-      - name: applovin_cost_20200113_1597056453
-      - name: applovin_cost_20200114_1586146353
-      - name: applovin_cost_20200114_1597056454
-      - name: applovin_cost_20200115_1586146363
-      - name: applovin_cost_20200115_1597056455
-      - name: applovin_cost_20200116_1586146375
-      - name: applovin_cost_20200116_1597056455
+      - name: applovin_cost_20230304_1678061785
+      # - name: applovin_cost_20230304_1678040172
+      # - name: applovin_cost_20230304_1678018576
+      # - name: applovin_cost_20230304_1677996977
+      # - name: applovin_cost_20230304_1677975407
+      # - name: applovin_cost_20230304_1677953767
+      # - name: applovin_cost_20230304_1677932169
+      # - name: applovin_cost_20230304_1677910564
+      # - name: applovin_cost_20230304_1677888985
+      - name: applovin_cost_20230305_1678061781
+      # - name: applovin_cost_20230305_1678040166
+      # - name: applovin_cost_20230305_1678018571
+      # - name: applovin_cost_20230305_1677996971
+      # - name: applovin_cost_20230305_1677975402
