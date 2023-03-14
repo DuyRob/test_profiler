@@ -6,25 +6,25 @@ with source as (
 
 renamed as (
     select
-        campaign_id,
         network_app_id,
+        campaign,
+        campaign_id,
+        ad_creative,
         ad_creative_id,
+        cast(null as string) as ad_type,
         clicks,
         impressions,
         installs,
         --uuid, this is not uuid, misleading names
         preview_link,
-        campaign,
-        geo,
         platform,
         raw_cost,
         country_code,
-        ad_creative,
         act_date,
         currency,
         utc,
         media_source,
-        --__index_level_0__,
+        site_id,
         _dbt_source_relation
     from source
 )
@@ -32,5 +32,5 @@ renamed as (
 select
     *,
     {{ dbt_utils.surrogate_key(['ad_creative_id'
-        , 'campaign_id', 'act_date']) }} as id -- TODO UUID not found
+        , 'campaign_id', 'act_date', 'country_code']) }} as id -- TODO UUID not found
 from renamed

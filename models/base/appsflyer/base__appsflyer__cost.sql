@@ -23,7 +23,7 @@ renamed as (
         installs,
         mapped_app_id
     from source
-    -- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
+-- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
 )
 
 select * from renamed
