@@ -16,7 +16,7 @@ with applovin as (
         network_app_id,
         media_source,
         {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
-        {{ get_is_cross_promotion('media_source', 'campaign', '') }} as is_cross_promotion -- site_id is required as 3rd argument, but new raw sources do not have this data. Will need check again with project team.
+        {{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }} as is_cross_promotion
 
     from {{ ref('base__applovin__cost') }}
 )
@@ -34,9 +34,10 @@ select
     ad_creative_id,
     ad_type,
     site_id,
+    act_date,
+    {{ dbt_utils.surrogate_key(['country_code', 'ad_creative_id', 'act_date', 'ad_type']) }} as id,
     impressions,
     clicks,
     installs,
-    raw_cost as cost_in_usd,
-    act_date
+    raw_cost as cost_in_usd
 from applovin

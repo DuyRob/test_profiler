@@ -3,19 +3,18 @@ with adwords as (
         act_date,
         network_app_id,
         campaign,
-        cast(campaign_id as string) as campaign_id,
+        campaign_id,
         location_id,
         impressions,
         clicks,
         installs,
-        -- These are referenced from the media_source_pre in adwords_cost
         raw_cost_currency,
         media_source,
         site_id,
         id,
         cast(raw_cost as float64) / 1000000 as raw_cost,
         {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
-        {{ get_is_cross_promotion('media_source', 'campaign', '') }} as is_cross_promotion -- site_id is required as 3rd argument, but new raw sources do not have this data. Will need check again with project team.
+        {{ get_is_cross_promotion('media_source', 'campaign', '') }} as is_cross_promotion
 
     from {{ ref('base__adwords__cost') }}
 ),
@@ -56,9 +55,11 @@ select
     cast(null as string) as ad_creative_id,
     ad_type,
     site_id,
-    impressions,
-    clicks,
-    installs,
-    cost_in_usd,
-    act_date
+    act_date,
+    {{ dbt_utils.surrogate_key(['country_code', 'campaign_id', 'act_date']) }} as id,
+    sum(impressions) as impressions,
+    sum(clicks) as clicks,
+    sum(installs) as installs,
+    sum(cost_in_usd) as cost_in_usd
 from final
+{{ dbt_utils.group_by(14) }}

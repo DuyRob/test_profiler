@@ -10,18 +10,20 @@ renamed as (
         media_source,
         agency,
         campaign,
-        adset,
-        ad_creative,
-        keywords,
         campaign_id,
+        adset,
         adset_id,
+        ad_creative,
         ad_creative_id,
+        keywords,
         act_date,
-        country_code,
         site_id,
-        cost,
-        installs,
-        mapped_app_id
+        cast(cost as float64) as cost,
+        cast(installs as int64) as installs, -- already in USD
+        case
+            when upper(country_code) = 'UK' then 'GB'
+            else upper(country_code)
+        end as country_code
     from source
 -- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
 )

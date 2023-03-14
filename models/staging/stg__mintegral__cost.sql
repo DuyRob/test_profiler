@@ -16,23 +16,24 @@ mintegral as (
         ad_creative,
         ad_creative_id,
         ad_type,
-        clicks,
-        impressions,
-        installs,
         preview_link,
         platform,
-        raw_cost,
         currency,
         country_code,
-        cast(act_date as date) as act_date,
+        act_date,
         utc,
         media_source,
         site_id,
         _dbt_source_relation,
         {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
-        {{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }} as is_cross_promotion
+        {{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }} as is_cross_promotion,
+        sum(clicks) as clicks,
+        sum(impressions) as impressions,
+        sum(installs) as installs,
+        sum(raw_cost) as raw_cost
 
     from {{ ref('base__mintegral__cost') }}
+    {{ dbt_utils.group_by(16) }}
 ),
 
 final as (
@@ -85,9 +86,10 @@ select
     ad_creative_id,
     ad_type,
     site_id,
+    act_date,
+    id,
     impressions,
     clicks,
     installs,
-    cost_in_usd,
-    act_date
+    cost_in_usd
 from final

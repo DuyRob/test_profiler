@@ -20,7 +20,7 @@ renamed as (
         platform,
         raw_cost,
         country_code,
-        act_date,
+        cast(act_date as date) as act_date,
         currency,
         utc,
         media_source,
@@ -31,6 +31,6 @@ renamed as (
 
 select
     *,
-    {{ dbt_utils.surrogate_key(['ad_creative_id'
+    {{ dbt_utils.surrogate_key(['site_id', 'ad_creative_id'
         , 'campaign_id', 'act_date', 'country_code']) }} as id -- TODO UUID not found
 from renamed

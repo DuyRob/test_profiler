@@ -9,7 +9,7 @@ renamed as (
         cast(act_date as date) as act_date,
         network_app_id, -- this should be ID and not name
         campaign,
-        campaign_id,
+        cast(campaign_id as string) as campaign_id,
         location_id,
         impressions,
         clicks,
