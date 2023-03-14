@@ -9,6 +9,7 @@ renamed as (
         cast(act_date as date) as act_date,
         network_app_id, -- this should be ID and not name
         campaign,
+
         cast(campaign_id as string) as campaign_id,
         location_id,
         impressions,
@@ -25,4 +26,5 @@ renamed as (
 select
     *,
     {{ dbt_utils.surrogate_key(['location_id', 'campaign_id', 'act_date']) }} as id
+
 from renamed

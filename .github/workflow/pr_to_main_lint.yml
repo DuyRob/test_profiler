@@ -1,0 +1,58 @@
+name: pr_to_main_lint
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'models/**'
+
+env:
+  ARTIFACT_DBT_MANIFEST_WORKFLOW: push_to_main.yml
+  ARTIFACT_DBT_MANIFEST_NAME: dbt_manifest
+
+  DBT_PROFILES_DIR: ./
+
+  ## Environment variables for running Dbt on Google BigQuery
+  DBT_GOOGLE_PROJECT_DEV: ama-dwh-dev
+  DBT_GOOGLE_KEYFILE_PATH_DEV: service_account.json
+  DBT_BIGQUERY_DATASET_DEV: CI
+
+jobs:
+  pr_to_main_lint:
+    name: pr_to_main_lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.7.x"
+
+      ## Dbt - Google BigQuery
+      - name: Authenticate gcloud
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          service_account_key: ${{ secrets.BIGQUERY_SA_KEYFILE_DEV }}
+          project_id: ${{ env.DBT_GOOGLE_PROJECT_DEV }}
+      
+      - name: Create Google Service Account key file from secret
+        run: 'echo "$KEYFILE" > ${{ env.DBT_GOOGLE_KEYFILE_PATH_DEV }}'
+        shell: bash
+        env:
+          KEYFILE: ${{ secrets.BIGQUERY_SA_KEYFILE_DEV }}
+
+      ## Install Python dependencies & Dbt packages
+      - name: Install dependencies
+        run: |
+          pip3 install -r requirements.txt
+          dbt deps
+          dbt seed
+
+      ## Lint model files
+      - name: Lint with sqlfluff
+        run: |
+          git fetch origin main:main
+          git diff master --name-only --diff-filter=d | egrep '^models/.*sql$$' | xargs -r sqlfluff lint

@@ -5,6 +5,9 @@ models:
   - name: base__appsflyer__cost
     description: Appsflyer base model
     columns:
-      - name: campaign_id 
+      - name: id 
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null

@@ -28,4 +28,7 @@ renamed as (
 -- TODO sync with Amanote team on these rows as currently they contain mostly 'None' data
 )
 
-select * from renamed
+select
+    *,
+    {{ dbt_utils.surrogate_key(['campaign_id', 'site_id']) }} as id
+from renamed
