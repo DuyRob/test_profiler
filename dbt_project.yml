@@ -49,6 +49,12 @@ models:
       mintegral:
         +schema: base_mintegral
 
+    staging:
+      +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
+      +materialized: table
+      +schema: intermediate
+      +required_tests: {"unique.*|not_null|at_least_one": 3}
+    
     intermediate:
       +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
       +materialized: table
