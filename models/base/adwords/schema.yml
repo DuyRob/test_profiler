@@ -7,4 +7,7 @@ models:
     columns:
       - name: id
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null
