@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-python@v1
         with:
-          python-version: "3.7.x"
+          python-version: "3.9"
 
       ## Dbt - Google BigQuery
       - name: Authenticate gcloud
@@ -55,4 +55,4 @@ jobs:
       - name: Lint with sqlfluff
         run: |
           git fetch origin main:main
-          git diff master --name-only --diff-filter=d | egrep '^models/.*sql$$' | xargs -r sqlfluff lint
+          git diff main --name-only --diff-filter=d | egrep '^models/.*sql$$' | xargs -r sqlfluff lint
