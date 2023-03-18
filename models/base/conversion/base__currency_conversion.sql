@@ -12,6 +12,6 @@ renamed as (
 
 select
     *,
-    {{ dbt_utils.surrogate_key(['date', 'currency']) }} as id
+    {{ dbt_utils.surrogate_key(['exchange_date', 'currency']) }} as id
 
 from renamed
