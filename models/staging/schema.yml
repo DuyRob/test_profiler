@@ -7,25 +7,25 @@ models:
     columns:
       - name: id
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
 
-  - name: staging__applovin__cost
+  - name: stg__applovin__cost
     description: Applovin staging model, where we add in agency name and check cross promotion - currency is already in USD
     columns:
       - name: id
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
 
-  - name: staging__mintegral__cost
+  - name: stg__mintegral__cost
     description: Mintegral staging model, where we convert currency, bundle & adam ID, add in agency name and check cross promotion
     columns:
       - name: id
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
 
-  - name: staging__appsflyer__cost
+  - name: stg__appsflyer__cost
     description: Appsflyer staging model, where we convert currency, add in agency name, Ama app id, and check cross promotion
     columns:
       - name: id
         description: '{{ doc("id")}}'
-        tests: ['unique', 'not_null']
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']

@@ -25,12 +25,24 @@ renamed as (
         utc,
         media_source,
         site_id,
-        _dbt_source_relation
+        _dbt_source_relation,
+        {{ dbt_utils.surrogate_key(['site_id', 'ad_creative_id',
+            'campaign_id', 'act_date', 'country_code']) }} as id,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(0)] as ingestion_epoch,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(1)] as ingestion_date
     from source
+),
+
+final as (
+    select
+        *,
+        rank() over (partition by id order by ingestion_epoch desc) as row_number
+    from renamed
 )
 
-select
-    *,
-    {{ dbt_utils.surrogate_key(['site_id', 'ad_creative_id'
-        , 'campaign_id', 'act_date', 'country_code']) }} as id -- TODO UUID not found
-from renamed
+select * from final
+where row_number = 1

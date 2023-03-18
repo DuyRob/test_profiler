@@ -5,7 +5,7 @@ with source as (
 ),
 
 renamed as (
-    select distinct
+    select
         campaign,
         campaign_id,
         ad_creative,
@@ -20,11 +20,25 @@ renamed as (
         cast(raw_cost as float64) as raw_cost,
         platform,
         network_app_id,
-        media_source
+        media_source,
+        _dbt_source_relation,
+        {{ dbt_utils.surrogate_key(['act_date', 'country_code',
+            'campaign_id', 'ad_creative_id', 'ad_type']) }} as id,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(0)] as ingestion_epoch,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(1)] as ingestion_date
     from source
+),
+
+final as (
+    select
+        *,
+        rank() over (partition by id order by ingestion_epoch desc) as row_number
+    from renamed
 )
 
-select
-    *,
-    {{ dbt_utils.surrogate_key(['act_date', 'country_code', 'campaign_id', 'ad_creative_id', 'ad_type']) }} as id
-from renamed
+select * from final
+where row_number = 1

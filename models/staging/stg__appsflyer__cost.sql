@@ -2,7 +2,7 @@ with appsflyer as (
     select
         network_app_id,
         media_source,
-        agency as agency_from_appsflyer,
+        agency_from_appsflyer,
         campaign,
         campaign_id,
         adset,
@@ -61,10 +61,7 @@ appsflyer_agg as (
             when substr(cast(ama_app_id as string), -1) = 'f' then 'facebook'
         end as platform,
         media_source,
-        case
-            when agency_from_appsflyer = 'None' then null
-            when lower(agency_from_appsflyer) = 'fbmagic' then 'yeahmobi'
-            else agency_from_appsflyer end as agency_from_appsflyer,
+        agency_from_appsflyer,
         agency_from_campaign_name,
         campaign,
         campaign_id,

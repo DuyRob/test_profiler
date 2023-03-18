@@ -1,0 +1,23 @@
+version: 2
+
+models:
+
+  - name: base__currency_conversion
+    description: Currency Conversion data, extracted from Google Sheets, stored as BQ external table. Referenced from dim_currency_exchange.
+    columns:
+      - name: id 
+        description: '{{ doc("id")}}'
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null
+
+  - name: base__geotarget
+    description: Geotarget data for conversion, extracted from Google Sheets, stored as BQ external table. Referenced from dim_geotarget.
+    columns:
+      - name: id 
+        description: '{{ doc("id")}}'
+        tests:
+          - unique:
+              severity: warn # TODO UUID not found, possible duplicated data
+          - not_null

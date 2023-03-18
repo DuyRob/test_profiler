@@ -12,7 +12,7 @@ with adwords as (
         media_source,
         site_id,
         id,
-        cast(raw_cost as float64) / 1000000 as raw_cost,
+        raw_cost,
         {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
         {{ get_is_cross_promotion('media_source', 'campaign', '') }} as is_cross_promotion
 
@@ -23,20 +23,20 @@ dim_currency_exchange as (
     select
         currency,
         date,
-        max(from_USD) as from_usd
-    from `amanotes-analytics.performance_monitoring.dim_currency_exchange`
+        max(from_usd) as from_usd
+    from {{ ref('base__currency_conversion') }}
     group by currency, date
 ),
 
 final as (select
     adwords.*,
-    dim_geotarget.Country_Code as country_code,
+    dim_geotarget.country_code as country_code,
     cast(null as string) as ad_type,
-    raw_cost / from_usd as cost_in_usd
+    adwords.raw_cost / dim_currency_exchange.from_usd as cost_in_usd
     from adwords
     left join
-        `amanotes-analytics.performance_monitoring.dim_geotarget` as dim_geotarget on
-            dim_geotarget.Criteria_ID = adwords.location_id
+        {{ ref('base__geotarget') }} on
+            dim_geotarget.id = adwords.location_id
     left join
         dim_currency_exchange on
             dim_currency_exchange.date = adwords.act_date and dim_currency_exchange.currency = adwords.raw_cost_currency

@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: conversion
+    database: ama-dwh-dev
+    schema: joon_raw  
+    tables:
+      - name: raw_currency_conversion
+      - name: geotarget
