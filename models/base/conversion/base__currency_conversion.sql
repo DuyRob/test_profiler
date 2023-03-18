@@ -5,7 +5,7 @@ with source as (
 renamed as (
     select
         cast(from_usd as float64) as from_usd,
-        cast(date as date) as date,
+        cast(date as date) as exchange_date,
         currency
     from source
 )

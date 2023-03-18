@@ -13,7 +13,8 @@ with adwords as (
         site_id,
         id,
         raw_cost,
-        {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
+        {{ get_agency_from_campaign_name_and_default_rules('media_source',
+            'campaign', 'network_app_id') }} as agency,
         {{ get_is_cross_promotion('media_source', 'campaign', '') }} as is_cross_promotion
 
     from {{ ref('base__adwords__cost') }}
@@ -22,10 +23,10 @@ with adwords as (
 dim_currency_exchange as (
     select
         currency,
-        date,
+        exchange_date,
         max(from_usd) as from_usd
     from {{ ref('base__currency_conversion') }}
-    group by currency, date
+    group by currency, exchange_date
 ),
 
 final as (select
@@ -39,7 +40,8 @@ final as (select
             dim_geotarget.id = adwords.location_id
     left join
         dim_currency_exchange on
-            dim_currency_exchange.date = adwords.act_date and dim_currency_exchange.currency = adwords.raw_cost_currency
+            dim_currency_exchange.exchange_date = adwords.act_date
+            and dim_currency_exchange.currency = adwords.raw_cost_currency
 )
 
 select

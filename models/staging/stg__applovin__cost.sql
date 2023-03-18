@@ -15,7 +15,8 @@ with applovin as (
         platform,
         network_app_id,
         media_source,
-        {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
+        {{ get_agency_from_campaign_name_and_default_rules('media_source', 
+            'campaign', 'network_app_id') }} as agency,
         {{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }} as is_cross_promotion
 
     from {{ ref('base__applovin__cost') }}

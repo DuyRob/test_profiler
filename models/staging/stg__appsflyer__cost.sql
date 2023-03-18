@@ -16,7 +16,8 @@ with appsflyer as (
         cost,
         installs,
         coalesce({{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }}, false) as is_cross_promotions,
-        {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency_from_campaign_name
+        {{ get_agency_from_campaign_name_and_default_rules('media_source',
+        'campaign', 'network_app_id') }} as agency_from_campaign_name
     from {{ ref('base__appsflyer__cost') }}
 ),
 
@@ -55,11 +56,6 @@ appsflyer_agg as (
         ama_app_id,
         network_app_id,
         country_code,
-        case
-            when substr(cast(ama_app_id as string), -1) = 'a' then 'android'
-            when substr(cast(ama_app_id as string), -1) = 'i' then 'ios'
-            when substr(cast(ama_app_id as string), -1) = 'f' then 'facebook'
-        end as platform,
         media_source,
         agency_from_appsflyer,
         agency_from_campaign_name,
@@ -69,17 +65,22 @@ appsflyer_agg as (
         adset_id,
         ad_creative,
         ad_creative_id,
-        cast(null as string) as ad_type,
-        keywords,
-        cast(null as string) as kw_match_type,
         site_id,
         is_cross_promotions,
-        sum(cast(null as int64)) as impressions,
-        sum(cast(null as int64)) as clicks,
+        keywords,
+        cast(null as string) as kw_match_type,
+        cast(null as string) as ad_type,
+        case
+            when substr(cast(ama_app_id as string), -1) = 'a' then 'android'
+            when substr(cast(ama_app_id as string), -1) = 'i' then 'ios'
+            when substr(cast(ama_app_id as string), -1) = 'f' then 'facebook'
+        end as platform,
+        null as clicks,
+        null as impressions,
         sum(installs) as installs,
         sum(cost) as cost
     from appsflyer_mapped
-    {{ dbt_utils.group_by(19) }}
+    {{ dbt_utils.group_by(21) }}
 )
 
 select * from appsflyer_agg

@@ -1,10 +1,10 @@
 with dim_currency_exchange as (
     select
         currency,
-        date,
+        exchange_date,
         max(from_usd) as from_usd
     from `amanotes-analytics.performance_monitoring.dim_currency_exchange`
-    group by currency, date
+    group by currency, exchange_date
 ),
 
 mintegral as (
@@ -24,7 +24,8 @@ mintegral as (
         utc,
         media_source,
         site_id,
-        {{ get_agency_from_campaign_name_and_default_rules('media_source', 'campaign', 'network_app_id') }} as agency,
+        {{ get_agency_from_campaign_name_and_default_rules('media_source',
+            'campaign', 'network_app_id') }} as agency,
         {{ get_is_cross_promotion('media_source', 'campaign', 'site_id') }} as is_cross_promotion,
         sum(clicks) as clicks,
         sum(impressions) as impressions,
@@ -59,7 +60,8 @@ final as (
     from mintegral
     left join
         dim_currency_exchange on
-            dim_currency_exchange.date = mintegral.act_date and dim_currency_exchange.currency = mintegral.currency
+            dim_currency_exchange.exchange_date = mintegral.act_date
+            and dim_currency_exchange.currency = mintegral.currency
 )
 
 select
