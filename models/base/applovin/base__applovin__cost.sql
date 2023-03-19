@@ -35,7 +35,8 @@ renamed as (
 
 final as (
     select
-        *,
+        * except (ingestion_date),
+        parse_date('%Y%m%d', ingestion_date) as ingestion_date,
         rank() over (partition by id order by ingestion_epoch desc) as row_number
     from renamed
 )
