@@ -5,9 +5,9 @@ sources:
     database: amanotes-analytics  
     schema: raw_cost_by_batch  
     tables:
-      - name: mintegral_cost_20230304_1678066106
+      - name: mintegral_cost_20230111_1673983332
       # - name: mintegral_cost_20200114_1597308072
-      - name: mintegral_cost_20230303_1678066111
+      - name: mintegral_cost_20230122_1674826736
       # - name: mintegral_cost_20200115_1597308074
       # - name: mintegral_cost_20200116_1586500410
       # - name: mintegral_cost_20200116_1597308074

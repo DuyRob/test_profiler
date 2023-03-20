@@ -6,31 +6,44 @@ with source as (
 
 renamed as (
     select
-        campaign_id,
         network_app_id,
+        campaign,
+        campaign_id,
+        ad_creative,
         ad_creative_id,
+        cast(null as string) as ad_type,
         clicks,
         impressions,
         installs,
         --uuid, this is not uuid, misleading names
         preview_link,
-        campaign,
-        geo,
         platform,
         raw_cost,
         country_code,
-        ad_creative,
-        act_date,
+        cast(act_date as date) as act_date,
         currency,
         utc,
         media_source,
-        --__index_level_0__,
-        _dbt_source_relation
+        site_id,
+        _dbt_source_relation,
+        {{ dbt_utils.surrogate_key(['site_id', 'ad_creative_id',
+            'campaign_id', 'act_date', 'country_code']) }} as id,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(0)] as ingestion_epoch,
+        array_reverse(
+            split(replace(_dbt_source_relation, '`', ''), '_')
+        ) [safe_offset(1)] as ingestion_date
     from source
+),
+
+final as (
+    select
+        * except (ingestion_date),
+        parse_date('%Y%m%d', ingestion_date) as ingestion_date,
+        rank() over (partition by id order by ingestion_epoch desc) as row_number
+    from renamed
 )
 
-select
-    *,
-    {{ dbt_utils.surrogate_key(['ad_creative_id'
-        , 'campaign_id', 'act_date']) }} as id -- TODO UUID not found
-from renamed
+select * from final
+where row_number = 1

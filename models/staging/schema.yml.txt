@@ -1,0 +1,31 @@
+version: 2
+
+models:
+
+  - name: stg__adwords__cost
+    description: Google Adwords staging model, where we convert currency, add in agency name and check cross promotion
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
+
+  - name: stg__applovin__cost
+    description: Applovin staging model, where we add in agency name and check cross promotion - currency is already in USD
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
+
+  - name: stg__mintegral__cost
+    description: Mintegral staging model, where we convert currency, bundle & adam ID, add in agency name and check cross promotion
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
+
+  - name: stg__appsflyer__cost
+    description: Appsflyer staging model, where we convert currency, add in agency name, Ama app id, and check cross promotion
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']

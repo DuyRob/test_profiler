@@ -1,0 +1,10 @@
+version: 2
+
+models:
+
+  - name: int__cost__ad_network
+    description: Intermediate models, combining cost from Adwords, Appsflyer and Mintegral, mapping with Amanotes app ID
+    columns:
+      - name: id
+        description: '{{ doc("id")}}'
+        tests: ['unique', 'not_null', 'dbt_utils.at_least_one']
