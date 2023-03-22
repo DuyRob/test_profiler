@@ -1,0 +1,65 @@
+default:
+  before_script:
+    - pip3 install -r requirements.txt
+    - dbt deps
+    - echo $GITLAB_CI_SA > $DBT_GOOGLE_KEYFILE_PATH_DEV
+
+image: python:3.10-slim-buster
+
+stages:
+  - pre-run
+  - run
+  - test
+
+# cache:
+#   paths:
+#     - .cache/pip
+#     - dbt_packages
+
+variables:
+  DBT_PROFILES_DIR: ./
+  DBT_USER: $DBT_USER
+  GIT_CHECKOUT: "true"
+
+  DBT_GOOGLE_KEYFILE_PATH_DEV: keyfile.json
+  DBT_GOOGLE_PROJECT_DEV: ama-dwh-dev
+  DBT_BIGQUERY_DATASET_DEV: CI_PR$CI_MERGE_REQUEST_IID
+
+.trigger_rule:
+  only: 
+    refs: 
+      - merge_requests
+    variables:
+      - $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+    changes:
+      - models/**/*
+      - snapshots/**/*
+      - dbt_project.yml
+      - packages.yml
+      - requirements.txt
+      - .gitlab-ci.yml
+
+seed:
+  stage: pre-run
+  extends: .trigger_rule
+  script: dbt seed
+
+check_required_tests:
+  stage: pre-run
+  extends: .trigger_rule
+  script: dbt run-operation --profiles-dir . required_tests
+
+sqlfluff_lint:
+  stage: pre-run
+  extends: .trigger_rule
+  script: sqlfluff lint
+
+dbt_run:
+  stage: run
+  extends: .trigger_rule
+  script: dbt run
+
+dbt_test:
+  stage: test
+  extends: .trigger_rule
+  script: dbt test
