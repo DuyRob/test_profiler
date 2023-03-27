@@ -1,8 +1,13 @@
 default:
   before_script:
+  # requirements
     - pip3 install -r requirements.txt
     - dbt deps
+  # GCP SA credz
     - echo $GITLAB_CI_SA > $DBT_GOOGLE_KEYFILE_PATH_DEV
+  # prod manifest
+    - python utils/pull_prod_manifest.py
+    - export DBT_ARTIFACT_STATE_PATH=./
 
 image: python:3.10-slim-buster
 
@@ -47,7 +52,7 @@ seed:
 check_required_tests:
   stage: pre-run
   extends: .trigger_rule
-  script: dbt run-operation --profiles-dir . required_tests
+  script: dbt run-operation required_tests
 
 sqlfluff_lint:
   stage: pre-run
@@ -57,9 +62,9 @@ sqlfluff_lint:
 dbt_run:
   stage: run
   extends: .trigger_rule
-  script: dbt run
+  script: dbt run --select state:modified+ --defer
 
 dbt_test:
   stage: test
   extends: .trigger_rule
-  script: dbt test
+  script: dbt test --select state:modified+ --defer
