@@ -60,3 +60,9 @@ models:
       +materialized: table
       +schema: mart
       +required_tests: {"unique.*|not_null|at_least_one": 3}
+    
+    profiling:
+      +database: "{{ 'ama-dwh-prod' if target.name == 'prod' else 'ama-dwh-dev' }}"
+      +materialized: table
+      +schema: profile
+      

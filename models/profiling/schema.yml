@@ -1,0 +1,18 @@
+version: 2
+
+models:
+
+  - name: profiling_mintegral_advertiser_advanced_performance_report
+    description: "Mintegral_campaing data check"
+    tests: 
+      - schema_change
+    columns: 
+      - name: null_proportion
+        tests: 
+          - dbt_utils.accepted_range:
+              max_value: 0.1
+      - name: row_count
+        tests: 
+          -  dbt_utils.accepted_range:
+              min_value: 1
+
