@@ -15,7 +15,7 @@ where 1=1
 
 
 {{ date_incremental('date', 1) }}
-and date >= '2023-03-20'
+and date >= '2023-03-25'
 
 
 ),
