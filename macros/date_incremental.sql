@@ -32,7 +32,7 @@
           select 
             TIMESTAMP_MILLIS(last_modified_time)  
           from {{this.database}}.{{this.schema}}.__TABLES__
-          and table_name = '{{this.include(database=false, schema=false)|replace("`","")}}'
+          where table_id = '{{this.include(database=false, schema=false)|replace("`","")}}'
       {%- endset -%}
       {%- set last_updated = run_query(get_last_updated).columns[0].values() -%}
       {% if not is_day_incremental %}
