@@ -8,15 +8,12 @@
 
 
 with prep as (
-    select *,         
-    'dummy' as partition_field
+    select *
      from {{ source('mintegral_staging', 'advertiser_advanced_performance_report') }}
 where 1=1 
 
 
 {{ date_incremental('date', 1) }}
-and date >='2023-01-01'
-
 
 ),
 
