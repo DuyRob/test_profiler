@@ -7,11 +7,11 @@ models:
     tests: 
       - schema_change
     columns: 
-      - name: null_proportion
+      - name: null_ratio
         tests: 
           - dbt_utils.accepted_range:
               max_value: 0.1
-      - name: row_count
+      - name: count
         tests: 
           -  dbt_utils.accepted_range:
               min_value: 1
