@@ -2,8 +2,8 @@
 
 
 with previous_updated_date as(
-    select distinct profiled_at, 
-    dense_rank() OVER(ORDER BY profiled_at DESC) as update_rank
+    select distinct profiling_date, 
+    dense_rank() OVER(ORDER BY profiling_date DESC) as update_rank
     FROM {{ model }}
     qualify update_rank = 2
 
@@ -16,10 +16,10 @@ from (
      column_name ||'-'|| data_type
 
     from {{ model }}
-    where profiled_at = current_date()
+    where profiling_date = current_date()
 
     and column_name || data_type not in 
-    ( select  column_name || data_type from {{model}}  where profiled_at = (select profiled_at from previous_updated_date))
+    ( select  column_name || data_type from {{model}}  where profiling_date = (select profiling_date from previous_updated_date))
 
     UNION ALL 
 
@@ -28,10 +28,10 @@ from (
      column_name ||'-'|| data_type
 
     from {{ model }}
-    where profiled_at = (select profiled_at from previous_updated_date)
+    where profiling_date = (select profiling_date from previous_updated_date)
 
     and column_name || data_type  not in 
-    ( select column_name || data_type  from {{model}}  where profiled_at = current_date())
+    ( select column_name || data_type  from {{model}}  where profiling_date = current_date())
 
 ) validation_errors
 
